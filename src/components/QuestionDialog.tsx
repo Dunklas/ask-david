@@ -69,26 +69,29 @@ const QuestionDialog = ({ onClose, onSubmit }: Props) => {
               </IconButton>
             </Stack>
           ))}
-          <Box display="flex" justifyContent="end">
-            <IconButton
-              aria-label="add option"
-              onClick={() => {
-                setOptions((prev) => [...prev, ""]);
-              }}
-            >
-              <AddIcon />
-            </IconButton>
-          </Box>
+          <Button
+            aria-label="add option"
+            variant="outlined"
+            onClick={() => {
+              setOptions((prev) => [...prev, ""]);
+            }}
+          >
+            Add option
+          </Button>
         </Stack>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={() => {
+        <Button
+          onClick={() => {
             onSubmit({
-                question,
-                options
-            })
-        }}>Ask</Button>
+              question,
+              options,
+            });
+          }}
+        >
+          Ask
+        </Button>
       </DialogActions>
     </Dialog>
   );
