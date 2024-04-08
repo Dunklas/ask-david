@@ -1,4 +1,4 @@
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Fade, Stack, Typography } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import CircularProgressWithLabel from "./CircularProgressWithLabel";
 
@@ -13,7 +13,7 @@ const Answer = ({ questionContext, onBack }: Props) => {
   useEffect(() => {
     const timeoutId = setInterval(() => {
       setProgress((progress) => (progress >= 100 ? 100 : progress + 10));
-    }, 400);
+    }, 300);
     return () => clearTimeout(timeoutId);
   }, []);
 
@@ -36,9 +36,11 @@ const Answer = ({ questionContext, onBack }: Props) => {
       )}
       {progress >= 100 && (
         <>
-          <Typography variant="h3" sx={{ textAlign: "center" }}>
-            {answer}
-          </Typography>
+          <Fade in timeout={2000}>
+            <Typography variant="h3" sx={{ textAlign: "center" }}>
+              {answer}
+            </Typography>
+          </Fade>
           <Button variant="contained" onClick={onBack}>
             Back
           </Button>
