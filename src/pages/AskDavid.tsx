@@ -37,7 +37,7 @@ const AskDavid = () => {
         />
       )}
       {questionContext && (
-        <Answer questionContext={questionContext} onAskAgain={() => {
+        <Answer questionContext={questionContext} onBack={() => {
             setQuestionContext(undefined);
         }} />
       )}
