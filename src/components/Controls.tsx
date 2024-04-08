@@ -1,10 +1,19 @@
 import { Button, Stack } from "@mui/material";
 
-const Controls = () => (
-    <Stack direction="column" spacing={2}>
-        <Button variant="outlined">Ask something</Button>
-        <Button variant="outlined">Who is David?</Button>
-    </Stack>
-)
+type Props = {
+  onAsk: () => void;
+  onWhoIs: () => void;
+};
+
+const Controls = ({ onAsk, onWhoIs }: Props) => (
+  <Stack direction="column" spacing={2}>
+    <Button variant="contained" onClick={onAsk}>
+      Ask something
+    </Button>
+    <Button variant="contained" onClick={onWhoIs}>
+      Who is David?
+    </Button>
+  </Stack>
+);
 
 export default Controls;
