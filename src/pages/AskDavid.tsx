@@ -3,6 +3,7 @@ import David from "../components/David";
 import Controls from "../components/Controls";
 import { useState } from "react";
 import QuestionDialog from "../components/QuestionDialog";
+import Answer from "../components/Answer";
 
 const AskDavid = () => {
   const [questionContext, setQuestionContext] = useState<QuestionContext>();
@@ -14,23 +15,31 @@ const AskDavid = () => {
         Ask David
       </Typography>
       <David />
-      <Box maxWidth="50%">
-        <Controls
-          onAsk={() => {
-            setShowDialog(true);
-          }}
-          onWhoIs={() => {}}
-        />
-      </Box>
+      {!questionContext && (
+        <Box maxWidth="50%">
+          <Controls
+            onAsk={() => {
+              setShowDialog(true);
+            }}
+            onWhoIs={() => {}}
+          />
+        </Box>
+      )}
       {showDialog && (
         <QuestionDialog
           onClose={() => {
             setShowDialog(false);
           }}
-          onSubmit={(questioContext) => {
-            console.log(questioContext);
+          onSubmit={(questionContext) => {
+            setQuestionContext(questionContext);
+            setShowDialog(false);
           }}
         />
+      )}
+      {questionContext && (
+        <Answer questionContext={questionContext} onAskAgain={() => {
+            setQuestionContext(undefined);
+        }} />
       )}
     </Stack>
   );
