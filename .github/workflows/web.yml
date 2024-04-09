@@ -67,7 +67,7 @@ jobs:
           aws-region: eu-west-2
       - name: terraform init
         run: |
-          terraform -chdir iac init -input=false \
+          terraform -chdir=iac init -input=false \
             -backend-config="bucket=${{ secrets.TF_STATE_BUCKET }}" \
             -backend-config="key=${{ env.TF_STATE_KEY }}"
         env:
