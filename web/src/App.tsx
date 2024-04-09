@@ -4,26 +4,45 @@ import {
   ThemeProvider,
   createTheme,
   useMediaQuery,
-  responsiveFontSizes
+  responsiveFontSizes,
 } from "@mui/material";
 
 import AskDavid from "./pages/AskDavid";
 import { useMemo } from "react";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import WhoIsDavid from "./pages/WhoIsDavid";
 
 function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
-  const userTheme = useMemo(() => responsiveFontSizes(createTheme({
-    palette: {
-      mode: prefersDarkMode ? 'dark' : 'light'
-    }
-  })), [prefersDarkMode]);
+  const userTheme = useMemo(
+    () =>
+      responsiveFontSizes(
+        createTheme({
+          palette: {
+            mode: prefersDarkMode ? "dark" : "light",
+          },
+        })
+      ),
+    [prefersDarkMode]
+  );
+
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <AskDavid />,
+    },
+    {
+      path: "/who",
+      element: <WhoIsDavid />,
+    },
+  ]);
 
   return (
     <ThemeProvider theme={userTheme}>
-      <CssBaseline/>
+      <CssBaseline />
       <Container sx={{ padding: 2 }}>
-        <AskDavid />
+        <RouterProvider router={router} />
       </Container>
     </ThemeProvider>
   );
