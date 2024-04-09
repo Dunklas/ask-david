@@ -1,0 +1,7 @@
+# Distribution does not utilise a WAF
+# This is a hobby project - I won't bother with a WAF
+AVD-AWS-0011
+
+# Bucket does not encrypt data with a customer managed key.
+# This is a hobby project - I won't pay for a key in KMS
+AVD-AWS-0132
