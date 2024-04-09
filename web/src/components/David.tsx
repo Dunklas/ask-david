@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import david1 from "../assets/david1.png";
+import david from "../assets/david2.png";
 
 const David = () => (
   <Box
@@ -10,7 +10,7 @@ const David = () => (
     }}
   >
     <img
-      src={david1}
+      src={david}
       alt="David"
       style={{ objectFit: "fill", maxWidth: "100%" }}
     />
