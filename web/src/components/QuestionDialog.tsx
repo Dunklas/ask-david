@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {
-  Box,
   Button,
   Dialog,
   DialogActions,
@@ -11,7 +10,6 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 
 type Props = {

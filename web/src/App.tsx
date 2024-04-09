@@ -1,4 +1,4 @@
-import { Container, Paper } from "@mui/material";
+import { Container } from "@mui/material";
 
 import AskDavid from "./pages/AskDavid";
 
