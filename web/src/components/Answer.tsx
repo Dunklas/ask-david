@@ -18,9 +18,12 @@ const Answer = ({ questionContext, onBack }: Props) => {
   }, []);
 
   const answer = useMemo(() => {
-    const shuffled = [...questionContext.options].sort(
-      () => 0.5 - Math.random()
+    const possibleAnswers = [...questionContext.options].concat(
+      questionContext.force
+        ? []
+        : new Array(questionContext.options.length).fill("...")
     );
+    const shuffled = [...possibleAnswers].sort(() => 0.5 - Math.random());
     return shuffled[0];
   }, [questionContext]);
 
