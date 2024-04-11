@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Box,
   Button,
@@ -24,6 +24,15 @@ const QuestionDialog = ({ onClose, onSubmit }: Props) => {
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState(["", ""]);
   const [force, setForce] = useState(false);
+
+  const isValid = useMemo(
+    () =>
+      question.length > 0 &&
+      options.length > 0 &&
+      options.every((option) => option.length > 0),
+    [question, options]
+  );
+
   return (
     <Dialog open={true} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>Ask something</DialogTitle>
@@ -86,7 +95,7 @@ const QuestionDialog = ({ onClose, onSubmit }: Props) => {
               control={<Checkbox value={force} />}
               label="Use force"
               onChange={() => {
-                setForce(prev => !prev);
+                setForce((prev) => !prev);
               }}
             />
           </Box>
@@ -95,6 +104,7 @@ const QuestionDialog = ({ onClose, onSubmit }: Props) => {
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
         <Button
+          disabled={!isValid}
           onClick={() => {
             onSubmit({
               question,
