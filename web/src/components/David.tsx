@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import david from "../assets/david3.png";
+import david from "../assets/david3.webp";
 
 const David = () => (
   <Box
