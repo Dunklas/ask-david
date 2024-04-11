@@ -1,11 +1,14 @@
 import { useState } from "react";
 import {
+  Box,
   Button,
+  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Divider,
+  FormControlLabel,
   IconButton,
   Stack,
   TextField,
@@ -20,6 +23,7 @@ type Props = {
 const QuestionDialog = ({ onClose, onSubmit }: Props) => {
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState(["", ""]);
+  const [force, setForce] = useState(false);
   return (
     <Dialog open={true} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>Ask something</DialogTitle>
@@ -76,6 +80,16 @@ const QuestionDialog = ({ onClose, onSubmit }: Props) => {
           >
             Add option
           </Button>
+          <Divider />
+          <Box display="flex" justifyContent="flex-end">
+            <FormControlLabel
+              control={<Checkbox value={force} />}
+              label="Use force"
+              onChange={() => {
+                setForce(prev => !prev);
+              }}
+            />
+          </Box>
         </Stack>
       </DialogContent>
       <DialogActions>
@@ -85,6 +99,7 @@ const QuestionDialog = ({ onClose, onSubmit }: Props) => {
             onSubmit({
               question,
               options,
+              force,
             });
           }}
         >
