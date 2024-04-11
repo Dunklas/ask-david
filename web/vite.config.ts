@@ -9,7 +9,7 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       workbox: {
-        globPatterns: ["**/*.{js,css,html,ico,png,svg,webp}"],
+        globPatterns: ["**/*.{js,css,html,ico,png,svg,webp,ttf}"],
       },
       manifest: {
         name: "Ask David",
