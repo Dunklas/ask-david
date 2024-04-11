@@ -12,7 +12,7 @@ const David = () => (
     <img
       src={david}
       alt="David"
-      style={{ objectFit: "fill", maxWidth: "100%" }}
+      style={{ objectFit: "scale-down", maxWidth: "100%" }}
     />
   </Box>
 );
