@@ -6,6 +6,7 @@ import {
   useMediaQuery,
   responsiveFontSizes,
 } from "@mui/material";
+import MetalMania from "./assets/MetalMania-Regular.ttf";
 
 import AskDavid from "./pages/AskDavid";
 import { useMemo } from "react";
@@ -21,6 +22,21 @@ function App() {
         createTheme({
           palette: {
             mode: prefersDarkMode ? "dark" : "light",
+          },
+          typography: {
+            fontFamily: "Metal Mania,Roboto,Arial",
+          },
+          components: {
+            MuiCssBaseline: {
+              styleOverrides: `
+                @font-face {
+                  font-family: 'Metal Mania';
+                  font-style: normal;
+                  font-weight: 400;
+                  src: url(${MetalMania}) format('truetype');
+                }
+              `,
+            },
           },
         })
       ),
