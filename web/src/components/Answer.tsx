@@ -34,7 +34,7 @@ const Answer = ({ questionContext, onBack }: Props) => {
       </Typography>
       {progress < 100 && (
         <Box display="flex" justifyContent="center">
-          <CircularProgressWithLabel value={progress} data-testid="spinner"/>
+          <CircularProgressWithLabel value={progress}/>
         </Box>
       )}
       {progress >= 100 && (

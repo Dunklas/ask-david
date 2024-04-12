@@ -10,7 +10,7 @@ function CircularProgressWithLabel(
 ) {
   return (
     <Box sx={{ position: "relative", display: "inline-flex" }}>
-      <CircularProgress variant="determinate" {...props} />
+      <CircularProgress variant="determinate" {...props} data-testid="spinner"/>
       <Box
         sx={{
           top: 0,
@@ -27,6 +27,7 @@ function CircularProgressWithLabel(
           variant="caption"
           component="div"
           color="text.secondary"
+          data-testid="spinner-percentage"
         >{`${Math.round(props.value)}%`}</Typography>
       </Box>
     </Box>
