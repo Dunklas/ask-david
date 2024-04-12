@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import QuestionDialog from "../QuestionDialog";
 
-it("should call onClose", async () => {
+test("should call onClose", async () => {
   const onClose = vi.fn();
   render(<QuestionDialog onClose={onClose} onSubmit={() => {}} />);
 
@@ -12,7 +12,7 @@ it("should call onClose", async () => {
   expect(onClose).toHaveBeenCalledOnce();
 });
 
-it("should call onSubmit", async () => {
+test("should call onSubmit", async () => {
   const onSubmit = vi.fn();
   render(<QuestionDialog onClose={() => {}} onSubmit={onSubmit} />);
 
@@ -41,4 +41,12 @@ it("should call onSubmit", async () => {
     ],
     force: true,
   });
+});
+
+test("should remove options", async () => {
+  render(<QuestionDialog onClose={() => {}} onSubmit={() => {}} />);
+  const user = userEvent.setup();
+
+  await user.click(screen.getAllByRole("button", { name: "remove option" })[1]);
+  expect(screen.queryByLabelText(/option 2/i)).not.toBeInTheDocument();
 });
