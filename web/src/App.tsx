@@ -38,9 +38,9 @@ function App() {
               `,
             },
           },
-        })
+        }),
       ),
-    [prefersDarkMode]
+    [prefersDarkMode],
   );
 
   const router = createBrowserRouter([

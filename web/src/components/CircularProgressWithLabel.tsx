@@ -6,7 +6,7 @@ import {
 } from "@mui/material";
 
 function CircularProgressWithLabel(
-  props: CircularProgressProps & { value: number }
+  props: CircularProgressProps & { value: number },
 ) {
   return (
     <Box sx={{ position: "relative", display: "inline-flex" }}>

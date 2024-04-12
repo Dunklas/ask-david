@@ -30,7 +30,7 @@ const QuestionDialog = ({ onClose, onSubmit }: Props) => {
       question.length > 0 &&
       options.length > 0 &&
       options.every((option) => option.length > 0),
-    [question, options]
+    [question, options],
   );
 
   return (
