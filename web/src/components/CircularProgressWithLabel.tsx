@@ -10,7 +10,11 @@ function CircularProgressWithLabel(
 ) {
   return (
     <Box sx={{ position: "relative", display: "inline-flex" }}>
-      <CircularProgress variant="determinate" {...props} data-testid="spinner"/>
+      <CircularProgress
+        variant="determinate"
+        {...props}
+        data-testid="spinner"
+      />
       <Box
         sx={{
           top: 0,

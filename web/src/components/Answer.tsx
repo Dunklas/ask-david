@@ -34,13 +34,17 @@ const Answer = ({ questionContext, onBack }: Props) => {
       </Typography>
       {progress < 100 && (
         <Box display="flex" justifyContent="center">
-          <CircularProgressWithLabel value={progress}/>
+          <CircularProgressWithLabel value={progress} />
         </Box>
       )}
       {progress >= 100 && (
         <>
           <Fade in timeout={2000}>
-            <Typography variant="h3" sx={{ textAlign: "center" }} data-testid="answer">
+            <Typography
+              variant="h3"
+              sx={{ textAlign: "center" }}
+              data-testid="answer"
+            >
               {answer}
             </Typography>
           </Fade>
