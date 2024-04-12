@@ -1,5 +1,5 @@
 type QuestionContext = {
-    question: string
-    options: string[],
-    force: boolean
-}
+  question: string;
+  options: string[];
+  force: boolean;
+};
