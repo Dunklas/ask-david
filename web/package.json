@@ -12,7 +12,7 @@
     "check-format": "prettier . --check",
     "format": "prettier . --write",
     "preview": "vite preview",
-    "validate": "npm run lint && npm run check-format",
+    "validate": "npm run lint && npm run check-format && npm run test",
     "generate-pwa-assets": "pwa-assets-generator --preset minimal-2023 src/assets/david3.webp"
   },
   "dependencies": {
