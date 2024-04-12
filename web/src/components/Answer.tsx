@@ -40,7 +40,11 @@ const Answer = ({ questionContext, onBack }: Props) => {
       {progress >= 100 && (
         <>
           <Fade in timeout={2000}>
-            <Typography variant="h3" sx={{ textAlign: "center" }}>
+            <Typography
+              variant="h3"
+              sx={{ textAlign: "center" }}
+              data-testid="answer"
+            >
               {answer}
             </Typography>
           </Fade>

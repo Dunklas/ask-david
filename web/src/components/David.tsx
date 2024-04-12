@@ -10,6 +10,7 @@ const David = () => (
     }}
   >
     <img
+      data-testid="david"
       src={david}
       alt="David"
       style={{ objectFit: "scale-down", maxWidth: "100%" }}

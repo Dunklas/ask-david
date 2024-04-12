@@ -34,7 +34,13 @@ const QuestionDialog = ({ onClose, onSubmit }: Props) => {
   );
 
   return (
-    <Dialog open={true} onClose={onClose} fullWidth maxWidth="sm">
+    <Dialog
+      open={true}
+      onClose={onClose}
+      fullWidth
+      maxWidth="sm"
+      data-testid="question-dialog"
+    >
       <DialogTitle>Ask something</DialogTitle>
       <DialogContent>
         <Stack spacing={2} sx={{ paddingY: 1 }}>
