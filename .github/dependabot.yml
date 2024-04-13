@@ -1,0 +1,41 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/web"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 8
+    groups:
+      emotion:
+        patterns:
+          - "@emotion*"
+      mui:
+        patterns:
+          - "@mui*"
+      testing-library:
+        patterns:
+          - "@testing-library*"
+      eslint:
+        patterns:
+          - "@typescript-eslint*"
+          - "eslint*"
+          - "@eslint*"
+      types:
+        patterns:
+          - "@types*"
+      vite:
+        patterns:
+          - "@vite*"
+          - "vite*"
+
+  - package-ecosystem: "terraform"
+    directory: "/iac"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 2
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
