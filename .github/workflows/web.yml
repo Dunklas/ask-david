@@ -13,7 +13,8 @@ on:
 
 permissions:
   id-token: write
-  contents: read
+  contents: write
+  pull-requests: write
 
 jobs:
   verify-frontend:
@@ -85,3 +86,13 @@ jobs:
         run: |
           CLOUDFRONT_DIST=$(terraform -chdir=iac output -raw cloudfront_id)
           aws cloudfront create-invalidation --distribution-id "${CLOUDFRONT_DIST}" --paths "/*"
+
+  dependabot:
+    if: ${{ github.actor == 'dependabot[bot]' && github.event_name == 'pull_request'}}
+    needs: [verify-frontend, build]
+    runs-on: ubuntu-latest
+    steps:
+      - run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
