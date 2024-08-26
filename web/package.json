@@ -16,7 +16,7 @@
     "generate-pwa-assets": "pwa-assets-generator --preset minimal-2023 src/assets/david3.webp"
   },
   "dependencies": {
-    "@emotion/react": "^11.13.0",
+    "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@fontsource/roboto": "^5.0.14",
     "@mui/icons-material": "^5.16.7",
