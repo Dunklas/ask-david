@@ -26,6 +26,7 @@ jobs:
         working-directory: iac
     steps:
       - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
       - run: terraform init -input=false -backend=false
       - run: terraform validate
       - run: terraform fmt --check --diff
