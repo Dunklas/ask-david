@@ -25,7 +25,7 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with:
-          node-version: 18.x
+          node-version-file: ./web/.node-version
       - run: npm install
       - run: npm run validate
 
@@ -43,7 +43,7 @@ jobs:
           aws-region: eu-west-2
       - uses: actions/setup-node@v5
         with:
-          node-version: 18.x
+          node-version-file: ./web/.node-version
       - run: npm install
       - run: npm run build
       - name: zip artifact
@@ -54,7 +54,7 @@ jobs:
         with:
           name: web-${{ github.sha }}
           path: web/dist.zip
-  
+
   release:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     needs: [build]
