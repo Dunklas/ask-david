@@ -26,7 +26,7 @@ jobs:
         working-directory: iac
     steps:
       - uses: actions/checkout@v6
-      - uses: hashicorp/setup-terraform@v3
+      - uses: hashicorp/setup-terraform@v4
       - run: terraform init -input=false -backend=false
       - run: terraform validate
       - run: terraform fmt --check --diff
@@ -46,7 +46,7 @@ jobs:
         working-directory: iac
     steps:
       - uses: actions/checkout@v6
-      - uses: hashicorp/setup-terraform@v3
+      - uses: hashicorp/setup-terraform@v4
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v6
         with:
