@@ -1,40 +1,51 @@
-import {
-  Box,
-  CircularProgress,
-  CircularProgressProps,
-  Typography,
-} from "@mui/material";
+import { Progress } from "./ui/progress";
 
-function CircularProgressWithLabel(
-  props: CircularProgressProps & { value: number },
-) {
+type Props = {
+  value: number;
+};
+
+function CircularProgressWithLabel({ value }: Props) {
+  const radius = 56;
+  const strokeWidth = 10;
+  const normalizedRadius = radius - strokeWidth / 2;
+  const circumference = normalizedRadius * 2 * Math.PI;
+  const strokeDashoffset =
+    circumference - (Math.min(value, 100) / 100) * circumference;
+
   return (
-    <Box sx={{ position: "relative", display: "inline-flex" }}>
-      <CircularProgress
-        variant="determinate"
-        {...props}
+    <div className="relative inline-flex h-36 w-36 items-center justify-center">
+      <svg
+        viewBox="0 0 112 112"
+        className="h-full w-full -rotate-90"
         data-testid="spinner"
-      />
-      <Box
-        sx={{
-          top: 0,
-          left: 0,
-          bottom: 0,
-          right: 0,
-          position: "absolute",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
+        aria-hidden="true"
       >
-        <Typography
-          variant="caption"
-          component="div"
-          color="text.secondary"
+        <circle
+          cx="56"
+          cy="56"
+          r={normalizedRadius}
+          strokeWidth={strokeWidth}
+          className="fill-transparent stroke-secondary"
+        />
+        <circle
+          cx="56"
+          cy="56"
+          r={normalizedRadius}
+          strokeWidth={strokeWidth}
+          strokeDasharray={circumference}
+          strokeDashoffset={strokeDashoffset}
+          strokeLinecap="round"
+          className="fill-transparent stroke-primary transition-all duration-300"
+        />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+        <span
+          className="text-3xl font-semibold tracking-tight text-foreground"
           data-testid="spinner-percentage"
-        >{`${Math.round(props.value)}%`}</Typography>
-      </Box>
-    </Box>
+        >{`${Math.round(value)}%`}</span>
+        <Progress value={value} className="w-20" />
+      </div>
+    </div>
   );
 }
 

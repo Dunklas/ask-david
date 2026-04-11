@@ -1,19 +1,17 @@
 import { useMemo, useState } from "react";
+import { Minus, Plus } from "lucide-react";
+import { Button } from "./ui/button";
+import { Checkbox } from "./ui/checkbox";
 import {
-  Box,
-  Button,
-  Checkbox,
   Dialog,
-  DialogActions,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
   DialogTitle,
-  Divider,
-  FormControlLabel,
-  IconButton,
-  Stack,
-  TextField,
-} from "@mui/material";
-import RemoveIcon from "@mui/icons-material/Remove";
+} from "./ui/dialog";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 
 type Props = {
   onClose: () => void;
@@ -34,94 +32,109 @@ const QuestionDialog = ({ onClose, onSubmit }: Props) => {
   );
 
   return (
-    <Dialog
-      open={true}
-      onClose={onClose}
-      fullWidth
-      maxWidth="sm"
-      data-testid="question-dialog"
-    >
-      <DialogTitle>Ask something</DialogTitle>
-      <DialogContent>
-        <Stack spacing={2} sx={{ paddingY: 1 }}>
-          <TextField
-            autoFocus
-            required
-            label="Question"
-            type="text"
-            fullWidth
-            value={question}
-            onChange={(event) => {
-              setQuestion(event.target.value);
-            }}
-          />
-          <Divider />
-          {options.map((option, i) => (
-            <Stack direction="row" key={`option-${i}`}>
-              <TextField
-                required
-                label={`Option ${i + 1}`}
-                type="text"
-                fullWidth
-                value={option}
-                onChange={(event) => {
-                  setOptions((prev) => [
-                    ...prev.map((v, j) => {
-                      if (j === i) {
-                        return event.target.value;
-                      }
-                      return v;
-                    }),
-                  ]);
-                }}
-              />
-              <IconButton
-                aria-label="remove option"
-                disabled={i === 0}
-                onClick={() => {
-                  setOptions((prev) => [...prev.filter((_, j) => j !== i)]);
-                }}
-              >
-                <RemoveIcon />
-              </IconButton>
-            </Stack>
-          ))}
+    <Dialog open onOpenChange={(open) => !open && onClose()}>
+      <DialogContent
+        className="grid max-h-[calc(100dvh-2rem)] grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden"
+        data-testid="question-dialog"
+      >
+        <DialogHeader>
+          <DialogTitle>Ask something</DialogTitle>
+          <DialogDescription>
+            Give David a question and the possible outcomes to choose from.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-5 overflow-y-auto px-1 py-2">
+          <div className="space-y-2">
+            <Label htmlFor="question">Question</Label>
+            <Input
+              autoFocus
+              required
+              id="question"
+              type="text"
+              value={question}
+              onChange={(event) => {
+                setQuestion(event.target.value);
+              }}
+            />
+          </div>
+          <div className="h-px bg-border" />
+          <div className="space-y-3">
+            {options.map((option, i) => (
+              <div className="flex items-end gap-2" key={`option-${i}`}>
+                <div className="flex-1 space-y-2">
+                  <Label htmlFor={`option-${i}`}>{`Option ${i + 1}`}</Label>
+                  <Input
+                    required
+                    id={`option-${i}`}
+                    type="text"
+                    value={option}
+                    onChange={(event) => {
+                      setOptions((prev) =>
+                        prev.map((value, index) => {
+                          if (index === i) {
+                            return event.target.value;
+                          }
+
+                          return value;
+                        }),
+                      );
+                    }}
+                  />
+                </div>
+                <Button
+                  aria-label="remove option"
+                  disabled={i === 0}
+                  size="icon"
+                  variant="outline"
+                  onClick={() => {
+                    setOptions((prev) => prev.filter((_, j) => j !== i));
+                  }}
+                >
+                  <Minus className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+          </div>
           <Button
             aria-label="add option"
-            variant="outlined"
+            className="w-full"
+            variant="outline"
             onClick={() => {
               setOptions((prev) => [...prev, ""]);
             }}
           >
+            <Plus className="h-4 w-4" />
             Add option
           </Button>
-          <Divider />
-          <Box display="flex" justifyContent="flex-end">
-            <FormControlLabel
-              control={<Checkbox value={force} />}
-              label="Use force"
-              onChange={() => {
-                setForce((prev) => !prev);
+          <div className="h-px bg-border" />
+          <label className="flex items-center justify-end gap-3 text-sm text-muted-foreground">
+            <Checkbox
+              checked={force}
+              onCheckedChange={(checked) => {
+                setForce(checked === true);
               }}
             />
-          </Box>
-        </Stack>
+            Use force
+          </label>
+        </div>
+        <DialogFooter>
+          <Button variant="ghost" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button
+            disabled={!isValid}
+            onClick={() => {
+              onSubmit({
+                question,
+                options,
+                force,
+              });
+            }}
+          >
+            Ask
+          </Button>
+        </DialogFooter>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button
-          disabled={!isValid}
-          onClick={() => {
-            onSubmit({
-              question,
-              options,
-              force,
-            });
-          }}
-        >
-          Ask
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 };

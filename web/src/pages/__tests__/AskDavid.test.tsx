@@ -17,18 +17,21 @@ test('should show question dialog when clicking "ask something"', async () => {
   expect(screen.getByTestId("question-dialog")).toBeVisible();
 });
 
-test("should redirect to david description", async () => {
+test("should toggle david description panel", async () => {
   render(
     <MemoryRouter initialEntries={["/"]}>
       <Routes>
         <Route path="/" element={<AskDavid />} />
-        <Route path="/who" element={<div>Who is David</div>} />
       </Routes>
     </MemoryRouter>,
   );
 
   const user = userEvent.setup();
 
-  await user.click(screen.getByText("Who is this guy?"));
-  expect(screen.getByText("Who is David")).toBeVisible();
+  await user.click(screen.getByRole("button", { name: /who is this guy\?/i }));
+  expect(screen.getByTestId("who-is-david-panel")).toBeVisible();
+  expect(screen.getByText(/^David is an awesome guy/)).toBeVisible();
+
+  await user.click(screen.getByRole("button", { name: /who is this guy\?/i }));
+  expect(screen.queryByTestId("who-is-david-panel")).not.toBeInTheDocument();
 });

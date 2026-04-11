@@ -1,21 +1,32 @@
-import { Box } from "@mui/material";
+import { cn } from "../lib/utils";
 import david from "../assets/david3.webp";
 
-const David = () => (
-  <Box
-    sx={{
-      display: "flex",
-      justifyContent: "center",
-      maxHeight: { xs: 600, sm: 650, md: 700, lg: 750, xl: 800 },
-    }}
+type Props = {
+  className?: string;
+  imageClassName?: string;
+};
+
+const David = ({ className, imageClassName }: Props) => (
+  <div
+    className={cn(
+      "flex justify-center max-h-[600px] sm:max-h-[650px] md:max-h-[700px] lg:max-h-[750px] xl:max-h-[800px]",
+      className,
+    )}
   >
     <img
       data-testid="david"
       src={david}
       alt="David"
-      style={{ objectFit: "scale-down", maxWidth: "100%" }}
+      className={cn("max-w-full object-scale-down", imageClassName)}
+      style={{
+        filter: "drop-shadow(0 0 28px rgba(0, 0, 0, 0.16))",
+        WebkitMaskImage:
+          "radial-gradient(ellipse at center, black 72%, transparent 100%)",
+        maskImage:
+          "radial-gradient(ellipse at center, black 72%, transparent 100%)",
+      }}
     />
-  </Box>
+  </div>
 );
 
 export default David;
