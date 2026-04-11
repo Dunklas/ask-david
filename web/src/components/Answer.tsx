@@ -1,6 +1,6 @@
-import { Box, Button, Fade, Stack, Typography } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import CircularProgressWithLabel from "./CircularProgressWithLabel";
+import { Button } from "./ui/button";
 
 type Props = {
   questionContext: QuestionContext;
@@ -28,32 +28,29 @@ const Answer = ({ questionContext, onBack }: Props) => {
   }, [questionContext]);
 
   return (
-    <Stack spacing={3}>
-      <Typography variant="h6" sx={{ textAlign: "center" }}>
+    <div className="flex flex-col gap-6">
+      <p className="text-center text-lg text-muted-foreground sm:text-xl">
         {questionContext.question}
-      </Typography>
+      </p>
       {progress < 100 && (
-        <Box display="flex" justifyContent="center">
+        <div className="flex justify-center">
           <CircularProgressWithLabel value={progress} />
-        </Box>
+        </div>
       )}
       {progress >= 100 && (
         <>
-          <Fade in timeout={2000}>
-            <Typography
-              variant="h3"
-              sx={{ textAlign: "center" }}
-              data-testid="answer"
-            >
-              {answer}
-            </Typography>
-          </Fade>
-          <Button variant="contained" onClick={onBack}>
+          <p
+            className="animate-fade-in text-center font-display text-4xl tracking-wide text-accent sm:text-5xl"
+            data-testid="answer"
+          >
+            {answer}
+          </p>
+          <Button className="self-center" onClick={onBack}>
             Back
           </Button>
         </>
       )}
-    </Stack>
+    </div>
   );
 };
 

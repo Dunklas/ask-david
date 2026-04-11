@@ -20,6 +20,6 @@ export default tseslint.config(
     },
   },
   {
-    ignores: ["dist", "eslint.config.js"],
+    ignores: ["coverage", "dist", "eslint.config.js"],
   },
 );

@@ -1,0 +1,75 @@
+@import "@fontsource/roboto/400.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Metal Mania";
+  src: url("./assets/MetalMania-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@layer base {
+  :root {
+    --background: 36 33% 97%;
+    --foreground: 24 10% 12%;
+    --card: 32 25% 98%;
+    --card-foreground: 24 10% 12%;
+    --popover: 32 25% 98%;
+    --popover-foreground: 24 10% 12%;
+    --primary: 22 95% 45%;
+    --primary-foreground: 40 33% 98%;
+    --secondary: 35 25% 91%;
+    --secondary-foreground: 24 10% 18%;
+    --muted: 34 21% 92%;
+    --muted-foreground: 24 8% 38%;
+    --accent: 47 95% 60%;
+    --accent-foreground: 24 10% 12%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 30 16% 82%;
+    --input: 30 16% 82%;
+    --ring: 22 95% 45%;
+    --radius: 1rem;
+  }
+
+  .dark {
+    --background: 22 20% 7%;
+    --foreground: 40 25% 94%;
+    --card: 24 18% 11%;
+    --card-foreground: 40 25% 94%;
+    --popover: 24 18% 11%;
+    --popover-foreground: 40 25% 94%;
+    --primary: 22 92% 54%;
+    --primary-foreground: 24 20% 10%;
+    --secondary: 22 12% 18%;
+    --secondary-foreground: 40 20% 92%;
+    --muted: 23 12% 16%;
+    --muted-foreground: 30 8% 70%;
+    --accent: 47 95% 60%;
+    --accent-foreground: 24 20% 10%;
+    --destructive: 0 63% 45%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 22 10% 22%;
+    --input: 22 10% 22%;
+    --ring: 22 92% 54%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply min-h-screen bg-background text-foreground antialiased;
+    background-image:
+      radial-gradient(circle at top, rgba(255, 196, 0, 0.12), transparent 35%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 40%);
+    font-family: Roboto, Arial, sans-serif;
+  }
+
+  #root {
+    @apply min-h-screen;
+  }
+}
