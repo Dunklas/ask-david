@@ -1,7 +1,9 @@
 import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 import AskDavid from "./pages/AskDavid";
-import BrainStatusIcon, { type BrainStatus } from "./components/BrainStatusIcon";
+import BrainStatusIcon, {
+  type BrainStatus,
+} from "./components/BrainStatusIcon";
 import { Button } from "./components/ui/button";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { WebLLMProvider } from "./lib/webllm/WebLLMContext";
@@ -47,10 +49,10 @@ const AppShell = () => {
     webLLM.state === "inactive"
       ? "inactive"
       : webLLM.state === "success"
-      ? "success"
-      : webLLM.state === "error"
-        ? "error"
-        : "loading";
+        ? "success"
+        : webLLM.state === "error"
+          ? "error"
+          : "loading";
 
   const progressLabel =
     webLLM.state === "loading"

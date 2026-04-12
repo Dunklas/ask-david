@@ -25,5 +25,7 @@ export const WebLLMProvider = ({ children }: WebLLMProviderProps) => {
     initializeWebLLM,
   };
 
-  return <WebLLMContext.Provider value={value}>{children}</WebLLMContext.Provider>;
+  return (
+    <WebLLMContext.Provider value={value}>{children}</WebLLMContext.Provider>
+  );
 };
