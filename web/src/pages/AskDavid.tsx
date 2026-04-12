@@ -1,16 +1,79 @@
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { Brain, ChevronDown, ChevronUp, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import Answer from "../components/Answer";
 import David from "../components/David";
 import QuestionDialog from "../components/QuestionDialog";
 import { Button } from "../components/ui/button";
+import {
+  canUseLocalAi,
+  getLocalAiDiagnostics,
+  getLocalAiStatus,
+  LOCAL_AI_PREPARATION_MESSAGE,
+  type LocalAiDiagnostics,
+  type LocalAiStatus,
+  preloadLocalAi,
+  subscribeToLocalAiDiagnostics,
+  subscribeToLocalAiStatus,
+} from "../lib/local-ai";
 
 const AskDavid = () => {
   const [questionContext, setQuestionContext] = useState<QuestionContext>();
   const [showDialog, setShowDialog] = useState(false);
   const [showWhoIsDavidDetails, setShowWhoIsDavidDetails] = useState(false);
+  const [localAiStatus, setLocalAiStatus] = useState<LocalAiStatus>(() =>
+    getLocalAiStatus(),
+  );
+  const [localAiDiagnostics, setLocalAiDiagnostics] =
+    useState<LocalAiDiagnostics>(() => getLocalAiDiagnostics());
+  const [localAiMessage, setLocalAiMessage] = useState<string>();
+  const [showLocalAiPopover, setShowLocalAiPopover] = useState(false);
+  const localAiIndicatorRef = useRef<HTMLDivElement | null>(null);
   const whoIsDavidSectionRef = useRef<HTMLDivElement | null>(null);
   const isAnswering = Boolean(questionContext);
+
+  useEffect(() => {
+    return subscribeToLocalAiStatus(setLocalAiStatus);
+  }, []);
+
+  useEffect(() => {
+    return subscribeToLocalAiDiagnostics(setLocalAiDiagnostics);
+  }, []);
+
+  useEffect(() => {
+    if (!canUseLocalAi()) {
+      return;
+    }
+
+    let ignore = false;
+
+    setLocalAiMessage(LOCAL_AI_PREPARATION_MESSAGE);
+
+    preloadLocalAi((statusText) => {
+      if (!ignore) {
+        setLocalAiMessage(statusText);
+      }
+    })
+      .then(() => {
+        if (ignore) {
+          return;
+        }
+
+        setLocalAiStatus("ready");
+        setLocalAiMessage(undefined);
+      })
+      .catch(() => {
+        if (ignore) {
+          return;
+        }
+
+        setLocalAiStatus("error");
+        setLocalAiMessage(undefined);
+      });
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   useEffect(() => {
     if (!showWhoIsDavidDetails) {
@@ -34,8 +97,97 @@ const AskDavid = () => {
     };
   }, [showWhoIsDavidDetails]);
 
+  useEffect(() => {
+    const handlePointerDown = (event: MouseEvent) => {
+      if (!localAiIndicatorRef.current?.contains(event.target as Node)) {
+        setShowLocalAiPopover(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+    };
+  }, []);
+
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="relative flex flex-1 flex-col">
+      {(localAiStatus === "preparing" ||
+        localAiStatus === "ready" ||
+        localAiStatus === "error" ||
+        localAiStatus === "unsupported") && (
+        <div
+          className="fixed left-4 top-4 z-50 sm:left-6 sm:top-6"
+          ref={localAiIndicatorRef}
+        >
+          <button
+            type="button"
+            aria-label={
+              localAiStatus === "ready"
+                ? "Local AI ready"
+                : localAiStatus === "error" || localAiStatus === "unsupported"
+                  ? "Local AI unavailable"
+                  : "Local AI preparing"
+            }
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card/90 p-0 text-foreground shadow-lg backdrop-blur"
+            data-testid="local-ai-indicator"
+            title={
+              localAiStatus === "ready"
+                ? "Local AI is ready"
+                : localAiStatus === "error" || localAiStatus === "unsupported"
+                  ? "Local AI is unavailable"
+                : "Local AI is preparing"
+            }
+            onClick={() => {
+              setShowLocalAiPopover((visible) => !visible);
+            }}
+          >
+            <div className="relative">
+              <Brain
+                className={`h-5 w-5 ${
+                  localAiStatus === "preparing" ? "animate-pulse" : ""
+                }`}
+              />
+              {(localAiStatus === "error" || localAiStatus === "unsupported") && (
+                <span className="absolute -right-1 -top-1 rounded-full bg-card text-destructive">
+                  <X className="h-3.5 w-3.5" />
+                </span>
+              )}
+            </div>
+          </button>
+          {showLocalAiPopover && (
+            <div
+              className="mt-2 w-72 rounded-2xl border border-border bg-card/95 p-4 text-left shadow-lg backdrop-blur"
+              data-testid="local-ai-popover"
+            >
+              <div className="space-y-2 text-sm leading-6">
+                <p className="font-medium text-foreground">Local AI</p>
+                <p className="text-muted-foreground">
+                  Status: {localAiDiagnostics.status}
+                </p>
+                <p className="break-all text-muted-foreground">
+                  Model: {localAiDiagnostics.model}
+                </p>
+                <p className="text-muted-foreground">
+                  Service worker ready: {localAiDiagnostics.serviceWorkerReady ? "yes" : "no"}
+                </p>
+                <p className="text-muted-foreground">
+                  Service worker controlling page: {localAiDiagnostics.serviceWorkerControlled ? "yes" : "no"}
+                </p>
+                {localAiDiagnostics.message && (
+                  <p className="text-muted-foreground">Message: {localAiDiagnostics.message}</p>
+                )}
+                {localAiDiagnostics.error && (
+                  <p className="break-words text-muted-foreground">
+                    Error: {localAiDiagnostics.error}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
       <div
         className={`flex flex-1 flex-col items-center ${
           isAnswering ? "justify-center gap-3" : "gap-6"
@@ -47,6 +199,11 @@ const AskDavid = () => {
           </h1>
         )}
         {!isAnswering && <David />}
+        {!isAnswering && localAiStatus === "preparing" && localAiMessage && (
+          <p className="max-w-md px-4 text-center text-xs leading-5 text-muted-foreground">
+            {localAiMessage}
+          </p>
+        )}
         {isAnswering && (
           <David
             className="w-full max-h-[34dvh] px-4 sm:max-h-[42dvh]"
