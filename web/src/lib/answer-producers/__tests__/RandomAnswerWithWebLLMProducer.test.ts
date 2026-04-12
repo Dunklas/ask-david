@@ -93,9 +93,7 @@ test("retries once when the first WebLLM answer is too bland", async () => {
 
 test("uses a local fallback when retry is still too bland", async () => {
   vi.useFakeTimers();
-  vi.spyOn(Math, "random")
-    .mockReturnValueOnce(0.99)
-    .mockReturnValueOnce(0);
+  vi.spyOn(Math, "random").mockReturnValueOnce(0.99).mockReturnValueOnce(0);
   const create = vi
     .fn()
     .mockResolvedValueOnce({
@@ -133,7 +131,9 @@ test("uses a local fallback when retry is still too bland", async () => {
 
   await vi.advanceTimersByTimeAsync(3000);
 
-  await expect(answerPromise).resolves.toBe("Stout, obviously. Try to keep up.");
+  await expect(answerPromise).resolves.toBe(
+    "Stout, obviously. Try to keep up.",
+  );
   expect(create).toHaveBeenCalledTimes(2);
 });
 

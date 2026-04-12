@@ -75,8 +75,7 @@ const getResponseText = async (
     messages: [
       {
         role: "system",
-        content:
-          `${davidPersona} Reply with exactly one short sentence in the same language as the user's question. The selected answer is already decided, so do not change it. You must include the selected answer text verbatim in the reply. Do not be polite, helpful, or enthusiastic. No lists, no emojis, no explanations.`,
+        content: `${davidPersona} Reply with exactly one short sentence in the same language as the user's question. The selected answer is already decided, so do not change it. You must include the selected answer text verbatim in the reply. Do not be polite, helpful, or enthusiastic. No lists, no emojis, no explanations.`,
       },
       {
         role: "user",
@@ -98,8 +97,7 @@ const getDissText = async (
     messages: [
       {
         role: "system",
-        content:
-          `${davidPersona} Reply with exactly one short diss in the same language as the user's question. Do not answer the question and do not list the options. Be rude, funny, and dismissive. No lists, no emojis, no explanations.`,
+        content: `${davidPersona} Reply with exactly one short diss in the same language as the user's question. Do not answer the question and do not list the options. Be rude, funny, and dismissive. No lists, no emojis, no explanations.`,
       },
       {
         role: "user",
@@ -147,7 +145,11 @@ const getStyledResponseText = async (
   questionContext: QuestionContext,
   selectedOption: string,
 ) => {
-  const response = await getResponseText(engine, questionContext, selectedOption);
+  const response = await getResponseText(
+    engine,
+    questionContext,
+    selectedOption,
+  );
 
   if (!isBlandAnswer(response, selectedOption)) {
     return response;
@@ -163,8 +165,7 @@ const getStyledResponseText = async (
     messages: [
       {
         role: "system",
-        content:
-          `${davidPersona} Reply with exactly one short sentence in the same language as the user's question. The selected answer is already decided, so do not change it. You must include the selected answer text verbatim in the reply. Do not be polite, helpful, or enthusiastic. No lists, no emojis, no explanations.`,
+        content: `${davidPersona} Reply with exactly one short sentence in the same language as the user's question. The selected answer is already decided, so do not change it. You must include the selected answer text verbatim in the reply. Do not be polite, helpful, or enthusiastic. No lists, no emojis, no explanations.`,
       },
       {
         role: "user",
