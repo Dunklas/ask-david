@@ -1,7 +1,10 @@
-export const selectRandomAnswer = ({ options, force }: QuestionContext) => {
-  const possibleAnswers = options.concat(
-    force ? [] : new Array(options.length).fill("..."),
-  );
+export const selectRandomAnswer = ({
+  options,
+  authenticMode,
+}: QuestionContext): string | null => {
+  const possibleAnswers = authenticMode
+    ? options.concat(new Array(options.length).fill(null))
+    : options;
 
   return possibleAnswers[Math.floor(Math.random() * possibleAnswers.length)];
 };

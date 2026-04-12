@@ -21,7 +21,7 @@ const renderAnswer = () => {
         questionContext={{
           question: "What to do?",
           options: ["Eat", "Drink"],
-          force: false,
+          authenticMode: false,
         }}
         onBack={() => {}}
       />

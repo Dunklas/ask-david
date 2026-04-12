@@ -28,7 +28,7 @@ test("should call onSubmit", async () => {
     screen.getByLabelText(/option 3/i),
     "And hear the lamentation of their women",
   );
-  await user.click(screen.getByRole("checkbox", { name: "Use force" }));
+  await user.click(screen.getByRole("checkbox", { name: "Authentic mode" }));
   expect(screen.getByRole("button", { name: "Ask" })).toBeEnabled();
   await user.click(screen.getByRole("button", { name: "Ask" }));
 
@@ -39,7 +39,7 @@ test("should call onSubmit", async () => {
       "See them driven before you",
       "And hear the lamentation of their women",
     ],
-    force: true,
+    authenticMode: true,
   });
 });
 

@@ -7,7 +7,7 @@ export type AnswerProduction =
     }
   | {
       state: "success";
-      answer: string;
+      answer: string | null;
     }
   | {
       state: "error";

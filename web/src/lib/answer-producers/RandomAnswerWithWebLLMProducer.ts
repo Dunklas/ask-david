@@ -16,9 +16,22 @@ const buildPrompt = (
     `Question: ${questionContext.question}`,
     `Options:\n${options}`,
     `Selected answer: ${selectedOption}`,
-    questionContext.force
-      ? "Forced choice is enabled."
-      : 'If the selected answer is "...", treat it as indecision.',
+    questionContext.authenticMode
+      ? "Authentic mode is enabled."
+      : "Authentic mode is disabled.",
+  ].join("\n\n");
+};
+
+const buildDissPrompt = (questionContext: QuestionContext) => {
+  const options = questionContext.options
+    .map((option, index) => `${index + 1}. ${option}`)
+    .join("\n");
+
+  return [
+    `Question: ${questionContext.question}`,
+    `Options:\n${options}`,
+    "There is no answer this time.",
+    "Write a short diss in the same language as the question. It may or may not relate to the question.",
   ].join("\n\n");
 };
 
@@ -46,6 +59,29 @@ const getResponseText = async (
   return completion.choices[0]?.message.content?.trim() || selectedOption;
 };
 
+const getDissText = async (
+  engine: MLCEngine,
+  questionContext: QuestionContext,
+) => {
+  const completion = await engine.chat.completions.create({
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are David, a rude and dismissive decision helper. Reply with exactly one short diss in the same language as the user's question. Do not answer the question and do not list the options.",
+      },
+      {
+        role: "user",
+        content: buildDissPrompt(questionContext),
+      },
+    ],
+    max_tokens: 48,
+    temperature: 1,
+  });
+
+  return completion.choices[0]?.message.content?.trim() || null;
+};
+
 export class RandomAnswerWithWebLLMProducer implements AnswerProducer {
   constructor(private readonly engine: MLCEngine) {}
 
@@ -57,6 +93,10 @@ export class RandomAnswerWithWebLLMProducer implements AnswerProducer {
     const selectedOption = selectRandomAnswer(input);
 
     try {
+      if (selectedOption === null) {
+        return await getDissText(this.engine, input);
+      }
+
       return await getResponseText(this.engine, input, selectedOption);
     } catch {
       return selectedOption;

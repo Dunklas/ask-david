@@ -21,6 +21,7 @@ const Answer = ({ questionContext, onBack }: Props) => {
     return new RandomAnswerProducer();
   });
   const production = useAnswerProduction(questionContext, producer);
+  const answerText = production.answer ?? "...";
 
   return (
     <div className="flex flex-col gap-6">
@@ -52,7 +53,7 @@ const Answer = ({ questionContext, onBack }: Props) => {
             className="animate-fade-in text-center font-display text-4xl tracking-wide text-accent sm:text-5xl"
             data-testid="answer"
           >
-            {production.answer}
+            {answerText}
           </p>
           <Button className="self-center" onClick={onBack}>
             Back

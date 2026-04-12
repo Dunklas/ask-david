@@ -24,7 +24,7 @@ test("returns a short llm-written answer when WebLLM succeeds", async () => {
   const answerPromise = producer.produce({
     question: "What should we have for breakfast?",
     options: ["IPA", "Stout"],
-    force: true,
+    authenticMode: false,
   });
 
   await vi.advanceTimersByTimeAsync(3000);
@@ -49,10 +49,43 @@ test("falls back to the selected option when WebLLM phrasing fails", async () =>
   const answerPromise = producer.produce({
     question: "What should we have for breakfast?",
     options: ["IPA", "Stout"],
-    force: true,
+    authenticMode: false,
   });
 
   await vi.advanceTimersByTimeAsync(3000);
 
   await expect(answerPromise).resolves.toMatch(/^IPA|Stout$/);
+});
+
+test("returns a diss when authentic mode produces no answer", async () => {
+  vi.useFakeTimers();
+  vi.spyOn(Math, "random").mockReturnValue(0.99);
+  const create = vi.fn().mockResolvedValue({
+    choices: [
+      {
+        message: {
+          content: "You don't deserve breakfast.",
+        },
+      },
+    ],
+  });
+  const engine = {
+    chat: {
+      completions: {
+        create,
+      },
+    },
+  } as unknown as MLCEngine;
+  const producer = new RandomAnswerWithWebLLMProducer(engine);
+
+  const answerPromise = producer.produce({
+    question: "What should we have for breakfast?",
+    options: ["IPA", "Stout"],
+    authenticMode: true,
+  });
+
+  await vi.advanceTimersByTimeAsync(3000);
+
+  await expect(answerPromise).resolves.toBe("You don't deserve breakfast.");
+  expect(create).toHaveBeenCalledOnce();
 });
