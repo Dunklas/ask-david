@@ -12,7 +12,7 @@ test("returns an answer after loading", async () => {
 
   vi.advanceTimersByTime(3000);
 
-  await expect(answerPromise).resolves.toMatch(/^Eat|Drink|\.\.\.$/);
+  await expect(answerPromise).resolves.toMatch(/^(Eat|Drink)$/);
 });
 
 test("can return null in authentic mode", async () => {

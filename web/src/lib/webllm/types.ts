@@ -32,5 +32,6 @@ export type WebLLMState =
 
 export type WebLLMContextValue = {
   webLLM: WebLLMState;
+  disableWebLLM: () => Promise<void>;
   initializeWebLLM: () => Promise<void>;
 };

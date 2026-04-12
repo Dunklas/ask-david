@@ -156,7 +156,7 @@ test("falls back to the selected option when WebLLM phrasing fails", async () =>
 
   await vi.advanceTimersByTimeAsync(3000);
 
-  await expect(answerPromise).resolves.toMatch(/^IPA|Stout$/);
+  await expect(answerPromise).resolves.toMatch(/^(IPA|Stout)$/);
 });
 
 test("returns a diss when authentic mode produces no answer", async () => {

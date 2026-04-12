@@ -14,6 +14,7 @@ const renderAnswer = () => {
           modelId: "test-model",
           engine: null,
         },
+        disableWebLLM: vi.fn().mockResolvedValue(undefined),
         initializeWebLLM: vi.fn().mockResolvedValue(undefined),
       }}
     >
@@ -54,5 +55,5 @@ test('should show answer after "loading"', async () => {
     await vi.advanceTimersByTimeAsync(loadingDelay);
   });
 
-  expect(screen.getByTestId("answer")).toHaveTextContent(/^Eat|Drink|...$/);
+  expect(screen.getByTestId("answer")).toHaveTextContent(/^(Eat|Drink)$/);
 });

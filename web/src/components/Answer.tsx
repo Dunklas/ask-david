@@ -1,5 +1,5 @@
 import { LoaderCircle } from "lucide-react";
-import { useState } from "react";
+import { useMemo } from "react";
 import { RandomAnswerProducer } from "../lib/answer-producers/RandomAnswerProducer";
 import { RandomAnswerWithWebLLMProducer } from "../lib/answer-producers/RandomAnswerWithWebLLMProducer";
 import { useAnswerProduction } from "../lib/answer-producers/useAnswerProduction";
@@ -13,13 +13,13 @@ type Props = {
 
 const Answer = ({ questionContext, onBack }: Props) => {
   const { webLLM } = useWebLLM();
-  const [producer] = useState(() => {
+  const producer = useMemo(() => {
     if (webLLM.state === "success") {
       return new RandomAnswerWithWebLLMProducer(webLLM.engine);
     }
 
     return new RandomAnswerProducer();
-  });
+  }, [webLLM]);
   const production = useAnswerProduction(questionContext, producer);
   const answerText = production.answer ?? "...";
 

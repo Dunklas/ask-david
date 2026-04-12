@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { WebLLMContext } from "./context";
 import {
+  disableWebLLM,
   getWebLLMState,
   initializeWebLLM,
   subscribeToWebLLM,
@@ -22,6 +23,7 @@ export const WebLLMProvider = ({ children }: WebLLMProviderProps) => {
 
   const value: WebLLMContextValue = {
     webLLM: state,
+    disableWebLLM,
     initializeWebLLM,
   };
 

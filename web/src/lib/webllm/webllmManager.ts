@@ -116,8 +116,7 @@ export const initializeWebLLM = () => {
       engine: null,
     });
 
-    initializationPromise = Promise.resolve();
-    return initializationPromise;
+    return Promise.resolve();
   }
 
   emit({
@@ -198,6 +197,26 @@ export const initializeWebLLM = () => {
   })();
 
   return initializationPromise;
+};
+
+export const disableWebLLM = async () => {
+  console.info("[webllm] Disable requested", {
+    currentState: currentState.state,
+  });
+
+  if (currentState.state === "success") {
+    try {
+      console.info("[webllm] Unloading MLCEngine");
+      await currentState.engine.unload();
+      console.info("[webllm] MLCEngine unloaded");
+    } catch (error) {
+      console.warn("[webllm] Failed to unload MLCEngine cleanly", error);
+    }
+  }
+
+  initializationPromise = undefined;
+  lastProgressReport = undefined;
+  emit(initialState);
 };
 
 export const getWebLLMEngine = (): MLCEngine | null => {

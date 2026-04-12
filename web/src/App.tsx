@@ -35,7 +35,7 @@ const AppShell = () => {
   const [theme, setTheme] = useState<"light" | "dark">(() =>
     getPreferredTheme(),
   );
-  const { initializeWebLLM, webLLM } = useWebLLM();
+  const { disableWebLLM, initializeWebLLM, webLLM } = useWebLLM();
 
   useEffect(() => {
     const root = document.documentElement;
@@ -59,7 +59,12 @@ const AppShell = () => {
       ? `${Math.round(webLLM.progress * 100)}%`
       : undefined;
 
-  const brainLabel = `${webLLM.message} (${webLLM.modelId})`;
+  const brainLabel =
+    webLLM.state === "inactive"
+      ? `${webLLM.message} (${webLLM.modelId}). Click to enable.`
+      : webLLM.state === "success"
+        ? `${webLLM.message} (${webLLM.modelId}). Click to disable.`
+        : `${webLLM.message} (${webLLM.modelId})`;
 
   return (
     <>
@@ -70,6 +75,10 @@ const AppShell = () => {
             ? () => {
                 void initializeWebLLM();
               }
+            : webLLM.state === "success"
+              ? () => {
+                  void disableWebLLM();
+                }
             : undefined
         }
         progressLabel={progressLabel}
