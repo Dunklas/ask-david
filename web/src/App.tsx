@@ -79,7 +79,7 @@ const AppShell = () => {
               ? () => {
                   void disableWebLLM();
                 }
-            : undefined
+              : undefined
         }
         progressLabel={progressLabel}
         status={brainStatus}
