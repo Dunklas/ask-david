@@ -1,6 +1,7 @@
 import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 import AskDavid from "./pages/AskDavid";
+import BrainStatusIcon from "./components/BrainStatusIcon";
 import { Button } from "./components/ui/button";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
@@ -41,6 +42,7 @@ function App() {
 
   return (
     <>
+      <BrainStatusIcon status="error" />
       <Button
         aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
         className="fixed right-4 top-4 z-50 h-11 w-11 rounded-full border border-border bg-card/90 p-0 text-foreground shadow-lg backdrop-blur hover:bg-accent/20 sm:right-6 sm:top-6"
