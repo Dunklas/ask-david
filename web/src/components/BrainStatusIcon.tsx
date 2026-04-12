@@ -1,4 +1,4 @@
-import { Brain, X } from "lucide-react";
+import { Brain, Check, X } from "lucide-react";
 import { cn } from "../lib/utils";
 
 export type BrainStatus = "inactive" | "loading" | "error" | "success";
@@ -56,6 +56,11 @@ const BrainStatusIcon = ({
         {status === "error" && (
           <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-destructive-foreground shadow-sm">
             <X className="h-3 w-3" strokeWidth={3} />
+          </span>
+        )}
+        {status === "success" && (
+          <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-green-600 text-white shadow-sm dark:bg-green-500">
+            <Check className="h-3 w-3" strokeWidth={3} />
           </span>
         )}
       </div>
