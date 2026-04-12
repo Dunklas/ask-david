@@ -1,63 +1,59 @@
-import { render, screen, act } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
+import { WebLLMContext } from "../../lib/webllm/context";
 import Answer from "../Answer";
 
-const tick = 300;
+const loadingDelay = 3000;
+
+const renderAnswer = () => {
+  return render(
+    <WebLLMContext.Provider
+      value={{
+        webLLM: {
+          state: "inactive",
+          message: "Local AI is offline",
+          modelId: "test-model",
+          engine: null,
+        },
+        disableWebLLM: vi.fn().mockResolvedValue(undefined),
+        initializeWebLLM: vi.fn().mockResolvedValue(undefined),
+      }}
+    >
+      <Answer
+        questionContext={{
+          question: "What to do?",
+          options: ["Eat", "Drink"],
+          authenticMode: false,
+        }}
+        onBack={() => {}}
+      />
+    </WebLLMContext.Provider>,
+  );
+};
 
 test("should start of by displaying a spinner", () => {
-  render(
-    <Answer
-      questionContext={{
-        question: "What to do?",
-        options: ["Eat", "Drink"],
-        force: false,
-      }}
-      onBack={() => {}}
-    />,
-  );
+  renderAnswer();
 
   expect(screen.getByTestId("spinner")).toBeVisible();
 });
 
-test('should "load" answer', () => {
+test('should keep showing spinner while "loading"', () => {
   vi.useFakeTimers();
-  render(
-    <Answer
-      questionContext={{
-        question: "What to do?",
-        options: ["Eat", "Drink"],
-        force: false,
-      }}
-      onBack={() => {}}
-    />,
-  );
+  renderAnswer();
 
   act(() => {
-    vi.advanceTimersByTime(tick);
+    vi.advanceTimersByTime(1500);
   });
-  expect(screen.getByTestId("spinner-percentage")).toHaveTextContent(/^10%$/);
 
-  act(() => {
-    vi.advanceTimersByTime(tick);
-  });
-  expect(screen.getByTestId("spinner-percentage")).toHaveTextContent(/^20%$/);
+  expect(screen.getByTestId("spinner")).toBeVisible();
 });
 
 test('should show answer after "loading"', async () => {
   vi.useFakeTimers();
-  render(
-    <Answer
-      questionContext={{
-        question: "What to do?",
-        options: ["Eat", "Drink"],
-        force: false,
-      }}
-      onBack={() => {}}
-    />,
-  );
+  renderAnswer();
 
-  act(() => {
-    vi.advanceTimersByTime(tick * 10);
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(loadingDelay);
   });
 
-  expect(screen.getByTestId("answer")).toHaveTextContent(/^Eat|Drink|...$/);
+  expect(screen.getByTestId("answer")).toHaveTextContent(/^(Eat|Drink)$/);
 });

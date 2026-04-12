@@ -21,7 +21,7 @@ type Props = {
 const QuestionDialog = ({ onClose, onSubmit }: Props) => {
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState(["", ""]);
-  const [force, setForce] = useState(false);
+  const [authenticMode, setAuthenticMode] = useState(false);
 
   const isValid = useMemo(
     () =>
@@ -109,12 +109,12 @@ const QuestionDialog = ({ onClose, onSubmit }: Props) => {
           <div className="h-px bg-border" />
           <label className="flex items-center justify-end gap-3 text-sm text-muted-foreground">
             <Checkbox
-              checked={force}
+              checked={authenticMode}
               onCheckedChange={(checked) => {
-                setForce(checked === true);
+                setAuthenticMode(checked === true);
               }}
             />
-            Use force
+            Authentic mode
           </label>
         </div>
         <DialogFooter>
@@ -127,7 +127,7 @@ const QuestionDialog = ({ onClose, onSubmit }: Props) => {
               onSubmit({
                 question,
                 options,
-                force,
+                authenticMode,
               });
             }}
           >

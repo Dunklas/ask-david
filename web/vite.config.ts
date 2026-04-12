@@ -21,6 +21,9 @@ export default defineConfig({
       registerType: "autoUpdate",
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,png,svg,webp,ttf}"],
+        // WebLLM is loaded on demand, but its lazy chunk still needs a slightly
+        // higher precache limit than Workbox's default 2 MiB.
+        maximumFileSizeToCacheInBytes: 7 * 1024 * 1024,
       },
       manifest: {
         name: "Ask David",
