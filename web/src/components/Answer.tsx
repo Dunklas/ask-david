@@ -1,7 +1,9 @@
 import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { RandomAnswerProducer } from "../lib/answer-producers/RandomAnswerProducer";
+import { RandomAnswerWithWebLLMProducer } from "../lib/answer-producers/RandomAnswerWithWebLLMProducer";
 import { useAnswerProduction } from "../lib/answer-producers/useAnswerProduction";
+import { useWebLLM } from "../lib/webllm/useWebLLM";
 import { Button } from "./ui/button";
 
 type Props = {
@@ -10,7 +12,14 @@ type Props = {
 };
 
 const Answer = ({ questionContext, onBack }: Props) => {
-  const [producer] = useState(() => new RandomAnswerProducer());
+  const { webLLM } = useWebLLM();
+  const [producer] = useState(() => {
+    if (webLLM.state === "success") {
+      return new RandomAnswerWithWebLLMProducer(webLLM.engine);
+    }
+
+    return new RandomAnswerProducer();
+  });
   const production = useAnswerProduction(questionContext, producer);
 
   return (

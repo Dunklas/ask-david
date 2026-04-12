@@ -1,14 +1,7 @@
 import type { AnswerProducer } from "./AnswerProducer";
+import { selectRandomAnswer } from "./selectRandomAnswer";
 
 const loadingDelayMs = 3000;
-
-const selectRandomAnswer = ({ options, force }: QuestionContext) => {
-  const possibleAnswers = options.concat(
-    force ? [] : new Array(options.length).fill("..."),
-  );
-
-  return possibleAnswers[Math.floor(Math.random() * possibleAnswers.length)];
-};
 
 export class RandomAnswerProducer implements AnswerProducer {
   async produce(input: QuestionContext) {

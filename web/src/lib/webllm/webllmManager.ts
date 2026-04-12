@@ -161,7 +161,10 @@ export const initializeWebLLM = () => {
       log("Constructed MLCEngine");
 
       log("Starting engine.reload()", { modelId: defaultWebLLMModel });
-      await withTimeout(engine.reload(defaultWebLLMModel), initializationTimeoutMs);
+      await withTimeout(
+        engine.reload(defaultWebLLMModel),
+        initializationTimeoutMs,
+      );
       log("engine.reload() resolved", { modelId: defaultWebLLMModel });
 
       emit({
