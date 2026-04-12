@@ -1,6 +1,6 @@
 import type { MLCEngine } from "@mlc-ai/web-llm";
 
-export const defaultWebLLMModel = "Llama-3.2-1B-Instruct-q4f16_1-MLC";
+export const defaultWebLLMModel = "Llama-3.2-1B-Instruct-q4f32_1-MLC";
 
 export type WebLLMState =
   | {

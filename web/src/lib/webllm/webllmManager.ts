@@ -1,6 +1,9 @@
 import type { InitProgressReport, MLCEngine } from "@mlc-ai/web-llm";
 import { defaultWebLLMModel, type WebLLMState } from "./types";
 
+const initializationTimeoutMs = 30_000;
+let lastProgressReport: InitProgressReport | undefined;
+
 const initialState: WebLLMState = {
   state: "inactive",
   message: "Local AI is offline",
@@ -31,6 +34,56 @@ const formatProgressMessage = (report: InitProgressReport) => {
   return report.text || "Loading local AI model";
 };
 
+const formatProgressSummary = (report: InitProgressReport) => {
+  return ` Last progress: ${Math.round(report.progress * 100)}% (${report.text}).`;
+};
+
+const getTimeoutMessage = () => {
+  return `Local AI initialization timed out after ${initializationTimeoutMs / 1000} seconds.`;
+};
+
+const createLogger = () => {
+  const startedAt = performance.now();
+
+  return (message: string, details?: unknown) => {
+    const elapsedMs = Math.round(performance.now() - startedAt);
+
+    if (details === undefined) {
+      console.info(`[webllm +${elapsedMs}ms] ${message}`);
+      return;
+    }
+
+    console.info(`[webllm +${elapsedMs}ms] ${message}`, details);
+  };
+};
+
+const getAdapterDetails = async () => {
+  const adapter = await navigator.gpu.requestAdapter();
+
+  if (!adapter) {
+    throw new Error("No WebGPU adapter was available.");
+  }
+
+  const adapterInfo = adapter.info;
+
+  return {
+    adapter,
+    adapterLabel:
+      adapterInfo.description || adapterInfo.vendor || "Unknown WebGPU adapter",
+  };
+};
+
+const withTimeout = async <T>(promise: Promise<T>, timeoutMs: number) => {
+  return await Promise.race<T>([
+    promise,
+    new Promise<T>((_, reject) => {
+      window.setTimeout(() => {
+        reject(new Error(getTimeoutMessage()));
+      }, timeoutMs);
+    }),
+  ]);
+};
+
 export const getWebLLMState = () => {
   return currentState;
 };
@@ -46,10 +99,16 @@ export const subscribeToWebLLM = (listener: (state: WebLLMState) => void) => {
 
 export const initializeWebLLM = () => {
   if (initializationPromise) {
+    console.info("[webllm] Reusing in-flight initialization");
     return initializationPromise;
   }
 
+  const log = createLogger();
+  lastProgressReport = undefined;
+  log("Initialization requested", { modelId: defaultWebLLMModel });
+
   if (!("gpu" in navigator)) {
+    log("WebGPU unavailable in this browser");
     emit({
       state: "error",
       message: "WebGPU is not available in this browser.",
@@ -71,10 +130,25 @@ export const initializeWebLLM = () => {
 
   initializationPromise = (async () => {
     try {
-      const { MLCEngine } = await import("@mlc-ai/web-llm");
+      log("Requesting WebGPU adapter");
+      const { adapterLabel } = await getAdapterDetails();
+      log("Adapter ready", { adapterLabel });
 
+      log("Importing @mlc-ai/web-llm");
+      const { MLCEngine } = await import("@mlc-ai/web-llm");
+      log("Imported @mlc-ai/web-llm");
+
+      log("Constructing MLCEngine");
       const engine = new MLCEngine({
         initProgressCallback: (report) => {
+          lastProgressReport = report;
+          log("Init progress", {
+            progress: report.progress,
+            percent: `${Math.round(report.progress * 100)}%`,
+            text: report.text,
+            timeElapsed: report.timeElapsed,
+          });
+
           emit({
             state: "loading",
             progress: report.progress,
@@ -84,20 +158,34 @@ export const initializeWebLLM = () => {
           });
         },
       });
+      log("Constructed MLCEngine");
 
-      await engine.reload(defaultWebLLMModel);
+      log("Starting engine.reload()", { modelId: defaultWebLLMModel });
+      await withTimeout(engine.reload(defaultWebLLMModel), initializationTimeoutMs);
+      log("engine.reload() resolved", { modelId: defaultWebLLMModel });
 
       emit({
         state: "success",
         progress: 1,
-        message: "Local AI is ready",
+        message: `Local AI is ready on ${adapterLabel}`,
         modelId: defaultWebLLMModel,
         engine,
       });
     } catch (error) {
+      const latestProgressReport = lastProgressReport;
+      const progressSummary = latestProgressReport
+        ? formatProgressSummary(latestProgressReport)
+        : "";
+      const errorMessage = `${getErrorMessage(error)}${progressSummary}`;
+
+      log("Initialization failed", {
+        error,
+        lastProgressReport: latestProgressReport,
+      });
+
       emit({
         state: "error",
-        message: getErrorMessage(error),
+        message: errorMessage,
         modelId: defaultWebLLMModel,
         engine: null,
       });
