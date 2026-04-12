@@ -1,16 +1,18 @@
 import { Brain, X } from "lucide-react";
 import { cn } from "../lib/utils";
 
-export type BrainStatus = "loading" | "error" | "success";
+export type BrainStatus = "inactive" | "loading" | "error" | "success";
 
 type BrainStatusIconProps = {
   status: BrainStatus;
   className?: string;
   label?: string;
   progressLabel?: string;
+  onClick?: () => void;
 };
 
 const statusLabels: Record<BrainStatus, string> = {
+  inactive: "AI is inactive",
   loading: "AI is thinking",
   error: "AI encountered an error",
   success: "AI is ready",
@@ -21,18 +23,26 @@ const BrainStatusIcon = ({
   className,
   label,
   progressLabel,
+  onClick,
 }: BrainStatusIconProps) => {
   const statusLabel = label ?? statusLabels[status];
+  const isClickable = status === "inactive" && onClick !== undefined;
 
   return (
-    <div
+    <button
       aria-label={statusLabel}
       className={cn(
         "fixed left-4 top-4 z-50 flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card/90 text-foreground shadow-lg backdrop-blur sm:left-6 sm:top-6",
+        isClickable
+          ? "cursor-pointer transition-colors hover:bg-accent/20"
+          : "cursor-default",
+        status === "inactive" && "text-muted-foreground",
         className,
       )}
-      role="status"
+      disabled={!isClickable}
+      onClick={onClick}
       title={statusLabel}
+      type="button"
     >
       <div className="relative flex items-center justify-center">
         <Brain
@@ -49,7 +59,7 @@ const BrainStatusIcon = ({
           </span>
         )}
       </div>
-    </div>
+    </button>
   );
 };
 

@@ -33,7 +33,7 @@ const AppShell = () => {
   const [theme, setTheme] = useState<"light" | "dark">(() =>
     getPreferredTheme(),
   );
-  const webLLM = useWebLLM();
+  const { initializeWebLLM, webLLM } = useWebLLM();
 
   useEffect(() => {
     const root = document.documentElement;
@@ -44,7 +44,9 @@ const AppShell = () => {
   }, [theme]);
 
   const brainStatus: BrainStatus =
-    webLLM.state === "success"
+    webLLM.state === "inactive"
+      ? "inactive"
+      : webLLM.state === "success"
       ? "success"
       : webLLM.state === "error"
         ? "error"
@@ -61,6 +63,13 @@ const AppShell = () => {
     <>
       <BrainStatusIcon
         label={brainLabel}
+        onClick={
+          webLLM.state === "inactive"
+            ? () => {
+                void initializeWebLLM();
+              }
+            : undefined
+        }
         progressLabel={progressLabel}
         status={brainStatus}
       />

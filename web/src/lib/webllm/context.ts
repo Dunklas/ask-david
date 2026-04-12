@@ -1,4 +1,6 @@
 import { createContext } from "react";
-import type { WebLLMState } from "./types";
+import type { WebLLMContextValue } from "./types";
 
-export const WebLLMContext = createContext<WebLLMState | undefined>(undefined);
+export const WebLLMContext = createContext<WebLLMContextValue | undefined>(
+  undefined,
+);

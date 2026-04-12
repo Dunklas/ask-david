@@ -2,9 +2,8 @@ import type { InitProgressReport, MLCEngine } from "@mlc-ai/web-llm";
 import { defaultWebLLMModel, type WebLLMState } from "./types";
 
 const initialState: WebLLMState = {
-  state: "loading",
-  progress: 0,
-  message: "Preparing local AI",
+  state: "inactive",
+  message: "Local AI is offline",
   modelId: defaultWebLLMModel,
   engine: null,
 };
@@ -62,7 +61,13 @@ export const initializeWebLLM = () => {
     return initializationPromise;
   }
 
-  emit(initialState);
+  emit({
+    state: "loading",
+    progress: 0,
+    message: "Preparing local AI",
+    modelId: defaultWebLLMModel,
+    engine: null,
+  });
 
   initializationPromise = (async () => {
     try {
@@ -96,6 +101,8 @@ export const initializeWebLLM = () => {
         modelId: defaultWebLLMModel,
         engine: null,
       });
+    } finally {
+      initializationPromise = undefined;
     }
   })();
 

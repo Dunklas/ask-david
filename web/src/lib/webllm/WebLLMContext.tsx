@@ -1,7 +1,11 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { WebLLMContext } from "./context";
-import { getWebLLMState, initializeWebLLM, subscribeToWebLLM } from "./webllmManager";
-import type { WebLLMState } from "./types";
+import {
+  getWebLLMState,
+  initializeWebLLM,
+  subscribeToWebLLM,
+} from "./webllmManager";
+import type { WebLLMContextValue, WebLLMState } from "./types";
 
 type WebLLMProviderProps = {
   children: ReactNode;
@@ -13,10 +17,13 @@ export const WebLLMProvider = ({ children }: WebLLMProviderProps) => {
   useEffect(() => {
     const unsubscribe = subscribeToWebLLM(setState);
 
-    void initializeWebLLM();
-
     return unsubscribe;
   }, []);
 
-  return <WebLLMContext.Provider value={state}>{children}</WebLLMContext.Provider>;
+  const value: WebLLMContextValue = {
+    webLLM: state,
+    initializeWebLLM,
+  };
+
+  return <WebLLMContext.Provider value={value}>{children}</WebLLMContext.Provider>;
 };

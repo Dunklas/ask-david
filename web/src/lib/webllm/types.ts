@@ -4,6 +4,12 @@ export const defaultWebLLMModel = "Llama-3.2-1B-Instruct-q4f16_1-MLC";
 
 export type WebLLMState =
   | {
+      state: "inactive";
+      message: string;
+      modelId: string;
+      engine: null;
+    }
+  | {
       state: "loading";
       progress: number;
       message: string;
@@ -23,3 +29,8 @@ export type WebLLMState =
       modelId: string;
       engine: null;
     };
+
+export type WebLLMContextValue = {
+  webLLM: WebLLMState;
+  initializeWebLLM: () => Promise<void>;
+};
