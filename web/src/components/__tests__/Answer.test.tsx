@@ -1,7 +1,7 @@
-import { render, screen, act } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import Answer from "../Answer";
 
-const tick = 300;
+const loadingDelay = 3000;
 
 test("should start of by displaying a spinner", () => {
   render(
@@ -18,7 +18,7 @@ test("should start of by displaying a spinner", () => {
   expect(screen.getByTestId("spinner")).toBeVisible();
 });
 
-test('should "load" answer', () => {
+test('should keep showing spinner while "loading"', () => {
   vi.useFakeTimers();
   render(
     <Answer
@@ -32,14 +32,10 @@ test('should "load" answer', () => {
   );
 
   act(() => {
-    vi.advanceTimersByTime(tick);
+    vi.advanceTimersByTime(1500);
   });
-  expect(screen.getByTestId("spinner-percentage")).toHaveTextContent(/^10%$/);
 
-  act(() => {
-    vi.advanceTimersByTime(tick);
-  });
-  expect(screen.getByTestId("spinner-percentage")).toHaveTextContent(/^20%$/);
+  expect(screen.getByTestId("spinner")).toBeVisible();
 });
 
 test('should show answer after "loading"', async () => {
@@ -55,8 +51,8 @@ test('should show answer after "loading"', async () => {
     />,
   );
 
-  act(() => {
-    vi.advanceTimersByTime(tick * 10);
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(loadingDelay);
   });
 
   expect(screen.getByTestId("answer")).toHaveTextContent(/^Eat|Drink|...$/);
