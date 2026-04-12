@@ -1,8 +1,7 @@
 const LOCAL_AI_MODEL = "SmolLM2-360M-Instruct-q4f16_1-MLC";
 const LOCAL_AI_DATA_SIZE_MB = 376;
 
-export const LOCAL_AI_PREPARATION_MESSAGE =
-  `I'm doing mental preparation to make decisions. It may take a while, and may consume about ${LOCAL_AI_DATA_SIZE_MB} MB of data.`;
+export const LOCAL_AI_PREPARATION_MESSAGE = `I'm doing mental preparation to make decisions. It may take a while, and may consume about ${LOCAL_AI_DATA_SIZE_MB} MB of data.`;
 
 export type LocalAiStatus =
   | "unsupported"
@@ -63,8 +62,13 @@ let isServiceWorkerReady = false;
 let isServiceWorkerControlled = false;
 let serviceWorkerWaitPromise: Promise<void> | undefined;
 
-const buildPrompt = (questionContext: QuestionContext, selectedAnswer: string) => {
-  const options = questionContext.options.map((option) => `- ${option}`).join("\n");
+const buildPrompt = (
+  questionContext: QuestionContext,
+  selectedAnswer: string,
+) => {
+  const options = questionContext.options
+    .map((option) => `- ${option}`)
+    .join("\n");
 
   return [
     `Question: ${questionContext.question}`,
@@ -122,7 +126,10 @@ const waitForServiceWorkerControl = async (timeoutMs = 5000) => {
 
   serviceWorkerWaitPromise = (async () => {
     const registration = await navigator.serviceWorker.ready;
-    setServiceWorkerState({ ready: true, controlled: Boolean(navigator.serviceWorker.controller) });
+    setServiceWorkerState({
+      ready: true,
+      controlled: Boolean(navigator.serviceWorker.controller),
+    });
 
     if (registration.active) {
       setServiceWorkerState({ ready: true });
@@ -319,9 +326,8 @@ const getEngine = async (onProgress?: (statusText: string) => void) => {
 
   if (!enginePromise) {
     enginePromise = (async () => {
-      const { CreateServiceWorkerMLCEngine, prebuiltAppConfig } = await import(
-        "@mlc-ai/web-llm"
-      );
+      const { CreateServiceWorkerMLCEngine, prebuiltAppConfig } =
+        await import("@mlc-ai/web-llm");
 
       await preparePersistentStorage();
       setServiceWorkerState({
@@ -334,23 +340,28 @@ const getEngine = async (onProgress?: (statusText: string) => void) => {
 
       setLocalAiError(undefined);
 
-      const engine = await CreateServiceWorkerMLCEngine(LOCAL_AI_MODEL, {
-        appConfig: {
-          ...prebuiltAppConfig,
-          useIndexedDBCache: true,
-        },
-        initProgressCallback: (progress: InitProgress) => {
-          if (progress.text) {
-            setLocalAiProgress(progress.text);
-            onProgress?.(`${LOCAL_AI_PREPARATION_MESSAGE} ${progress.text}`);
-            return;
-          }
+      const engine = await CreateServiceWorkerMLCEngine(
+        LOCAL_AI_MODEL,
+        {
+          appConfig: {
+            ...prebuiltAppConfig,
+            useIndexedDBCache: true,
+          },
+          initProgressCallback: (progress: InitProgress) => {
+            if (progress.text) {
+              setLocalAiProgress(progress.text);
+              onProgress?.(`${LOCAL_AI_PREPARATION_MESSAGE} ${progress.text}`);
+              return;
+            }
 
-          setLocalAiProgress(LOCAL_AI_PREPARATION_MESSAGE);
-          onProgress?.(LOCAL_AI_PREPARATION_MESSAGE);
+            setLocalAiProgress(LOCAL_AI_PREPARATION_MESSAGE);
+            onProgress?.(LOCAL_AI_PREPARATION_MESSAGE);
+          },
+          logLevel: "ERROR",
         },
-        logLevel: "ERROR",
-      }, undefined, LOCAL_AI_KEEP_ALIVE_MS);
+        undefined,
+        LOCAL_AI_KEEP_ALIVE_MS,
+      );
 
       setLocalAiProgress(undefined);
       setLocalAiStatus("ready");

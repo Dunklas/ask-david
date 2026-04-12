@@ -131,9 +131,7 @@ test("should open local ai diagnostics popover when clicking brain icon", async 
   await user.click(screen.getByTestId("local-ai-indicator"));
 
   expect(screen.getByTestId("local-ai-popover")).toBeVisible();
-  expect(
-    screen.getByText(/smollm2-360m-instruct-q4f16_1-mlc/i),
-  ).toBeVisible();
+  expect(screen.getByText(/smollm2-360m-instruct-q4f16_1-mlc/i)).toBeVisible();
   expect(screen.getByText(/status: preparing/i)).toBeVisible();
   expect(screen.getByText(/service worker ready: yes/i)).toBeVisible();
 });

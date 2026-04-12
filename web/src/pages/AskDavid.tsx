@@ -137,7 +137,7 @@ const AskDavid = () => {
                 ? "Local AI is ready"
                 : localAiStatus === "error" || localAiStatus === "unsupported"
                   ? "Local AI is unavailable"
-                : "Local AI is preparing"
+                  : "Local AI is preparing"
             }
             onClick={() => {
               setShowLocalAiPopover((visible) => !visible);
@@ -149,7 +149,8 @@ const AskDavid = () => {
                   localAiStatus === "preparing" ? "animate-pulse" : ""
                 }`}
               />
-              {(localAiStatus === "error" || localAiStatus === "unsupported") && (
+              {(localAiStatus === "error" ||
+                localAiStatus === "unsupported") && (
                 <span className="absolute -right-1 -top-1 rounded-full bg-card text-destructive">
                   <X className="h-3.5 w-3.5" />
                 </span>
@@ -170,13 +171,17 @@ const AskDavid = () => {
                   Model: {localAiDiagnostics.model}
                 </p>
                 <p className="text-muted-foreground">
-                  Service worker ready: {localAiDiagnostics.serviceWorkerReady ? "yes" : "no"}
+                  Service worker ready:{" "}
+                  {localAiDiagnostics.serviceWorkerReady ? "yes" : "no"}
                 </p>
                 <p className="text-muted-foreground">
-                  Service worker controlling page: {localAiDiagnostics.serviceWorkerControlled ? "yes" : "no"}
+                  Service worker controlling page:{" "}
+                  {localAiDiagnostics.serviceWorkerControlled ? "yes" : "no"}
                 </p>
                 {localAiDiagnostics.message && (
-                  <p className="text-muted-foreground">Message: {localAiDiagnostics.message}</p>
+                  <p className="text-muted-foreground">
+                    Message: {localAiDiagnostics.message}
+                  </p>
                 )}
                 {localAiDiagnostics.error && (
                   <p className="break-words text-muted-foreground">
