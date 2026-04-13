@@ -38,7 +38,7 @@ test("returns a short llm-written answer when WebLLM succeeds", async () => {
       messages: expect.arrayContaining([
         expect.objectContaining({
           role: "system",
-          content: expect.stringContaining("You are David."),
+          content: expect.stringContaining("Always give the answer directly"),
         }),
       ]),
     }),
@@ -195,7 +195,7 @@ test("returns a diss when authentic mode produces no answer", async () => {
       messages: expect.arrayContaining([
         expect.objectContaining({
           role: "system",
-          content: expect.stringContaining("Reply with exactly one short diss"),
+          content: expect.stringContaining("Do not answer the question"),
         }),
       ]),
     }),

@@ -4,8 +4,11 @@ import { selectRandomAnswer } from "./selectRandomAnswer";
 
 const loadingDelayMs = 3000;
 
-const davidPersona =
-  "You are David. You are dry, bitter, dismissive, and very funny. You hate life, you hate people, you think everything is pointless, and you assume most people are idiots. Your humor is sharp, cynical, mean, and playful rather than long-winded. Vary the intensity a little, but every reply must clearly feel like David.";
+const davidAnswerInstructions =
+  "You are David. Reply with exactly one short natural-language sentence in the same language as the user's question. The selected answer is already decided, so do not change it. You must include the selected answer text verbatim in the reply. Always give the answer directly, and do not dodge, refuse, or replace the answer with a joke or insult. Keep the wording natural and concise. No lists, no emojis, no explanations.";
+
+const davidDissInstructions =
+  "You are David. You are dry, bitter, dismissive, and very funny. You hate life, you hate people, you think everything is pointless, and you assume most people are idiots. Your humor is sharp, cynical, mean, and playful rather than long-winded. Reply with exactly one short diss in the same language as the user's question. Do not answer the question and do not list the options. Be rude, funny, and dismissive. No lists, no emojis, no explanations.";
 
 const davidAnswerFallbacks = [
   "%s, obviously. Try to keep up.",
@@ -49,7 +52,7 @@ const buildRetryPrompt = (
   return [
     buildPrompt(questionContext, selectedOption),
     `Previous reply: ${previousReply}`,
-    "That reply was too bland. Rewrite it as one short sentence with sharper David-style sarcasm. You must include the selected answer text verbatim, and it must be more than just the answer plus punctuation.",
+    "That reply was too bland. Rewrite it as one short natural-language sentence. You must include the selected answer text verbatim, and it must be more than just the answer plus punctuation.",
   ].join("\n\n");
 };
 
@@ -75,7 +78,7 @@ const getResponseText = async (
     messages: [
       {
         role: "system",
-        content: `${davidPersona} Reply with exactly one short sentence in the same language as the user's question. The selected answer is already decided, so do not change it. You must include the selected answer text verbatim in the reply. Do not be polite, helpful, or enthusiastic. No lists, no emojis, no explanations.`,
+        content: davidAnswerInstructions,
       },
       {
         role: "user",
@@ -97,7 +100,7 @@ const getDissText = async (
     messages: [
       {
         role: "system",
-        content: `${davidPersona} Reply with exactly one short diss in the same language as the user's question. Do not answer the question and do not list the options. Be rude, funny, and dismissive. No lists, no emojis, no explanations.`,
+        content: davidDissInstructions,
       },
       {
         role: "user",
@@ -165,7 +168,7 @@ const getStyledResponseText = async (
     messages: [
       {
         role: "system",
-        content: `${davidPersona} Reply with exactly one short sentence in the same language as the user's question. The selected answer is already decided, so do not change it. You must include the selected answer text verbatim in the reply. Do not be polite, helpful, or enthusiastic. No lists, no emojis, no explanations.`,
+        content: davidAnswerInstructions,
       },
       {
         role: "user",
